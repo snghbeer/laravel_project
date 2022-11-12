@@ -120,7 +120,7 @@
                                     <a class="nav-link" href="{{route('faqForm')}}">Ask a question</a>
                                 </nav>
                             </div>
-                            <a class="nav-link" href="{{route('home')}}">
+                            <a class="nav-link" href="{{route('contactView')}}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                                 Contact us
                             </a>

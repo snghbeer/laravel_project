@@ -17,6 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('category_name');
         });
+
+        Schema::table('questions', function (Blueprint $table) {
+            $table->foreignId('category_id')->constrained();
+        });
     }
 
     /**

@@ -15,8 +15,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->integer('role')->default('0');
             $table->integer('avatar')->nullable();
             $table->date('bdate')->default(DB::raw('NOW()'));
+            $table->text('aboutme')->default('');
+            $table->string('avatar', 255)->nullable()->change();
+
         });
     }
 

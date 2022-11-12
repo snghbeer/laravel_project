@@ -22,8 +22,8 @@ class CheckAdmin
                 return $next($request);
             }
         }else{
-            return redirect('guest.dash');
+            return redirect(route('guest.dash'));
         }
-        return $next($request);
+        abort(403);
     }
 }

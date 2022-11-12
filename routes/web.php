@@ -38,6 +38,10 @@ Route::prefix('admin')->middleware('auth', 'admin') -> group(function(){
     Route::delete('/faq/question/delete/{id}', [AdminDashboardController::class, 'deleteQuestion'])->name('admin.deleteQst');
     Route::put('/faq/question/{id}/update', [AdminDashboardController::class, 'updateQuestion'])->name('updateQuestion');
 
+    Route::get('/contact/message/{id}', [AdminDashboardController::class, 'getMsg'])->name('admin.getMsg');
+    Route::post('/contact/message/reply', [AdminDashboardController::class, 'sendMail'])->name('admin.sendMail');
+
+
     Route::get('/faq/edit-page/{id}', [AdminDashboardController::class, 'editFaqView'])->name('editFaqView');
 
 });  
@@ -73,6 +77,13 @@ Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware(
 Route::get('/faq', [GuestController::class, 'faqView'])->name('faqView');
 Route::get('/faq/ask', [HomeController::class, 'faqForm'])->name('faqForm');
 Route::get('/faq/cat/{id}/questions', [GuestController::class, 'getCatQuestions'])->name('getCatQ');
+Route::get('/news/{id}', [GuestController::class, 'detailedNews'])->name('detailedNews');
+
+Route::get('/contact', [GuestController::class, 'contactView'])->name('contactView');
+Route::post('/contact/fill', [GuestController::class, 'sendContactForm'])->name('sendContactForm');
+
+Route::get('/news/{id}/comments', [HomeController::class, 'getComments'])->name('getComments');
+Route::post('/news/addComment', [HomeController::class, 'addComment'])->name('addComment');
 
 Route::get('/dbtest', function () {
     return view('dbtest');

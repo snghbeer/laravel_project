@@ -16,11 +16,15 @@
       <div class="main-timeline-2">
         <div class="timeline-2 {{ $key%2 == 0 ? 'left-2' : 'right-2'}}">
           <div class="card">
+            <a href="{{route('detailedNews', $item->id)}}">
             <img src="{{Storage::url($item->cover)}}" class="card-img-top" alt="Responsive image">
+            </a>
             <div class="card-body p-4">
               <div class="d-flex justify-content-between bd-highlight mb-3">
                 <div class="p-2 bd-highlight">
+                  <a href="{{route('detailedNews', $item->id)}}">
                   <h4 class="fw-bold mb-4">{{$item->title}}</h4>
+                  </a>
                 </div>
                 @auth
                 @if (Auth::user()->role === 1)

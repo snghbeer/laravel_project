@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->text('aboutme')->default('');
+        Schema::create('comments', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('author');
+            $table->string('content');
+            $table->foreignId('news_id')->constrained();
         });
     }
 
@@ -25,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('aboutme');
-        });
+        Schema::dropIfExists('comments');
     }
 };

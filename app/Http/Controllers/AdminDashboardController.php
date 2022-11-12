@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,9 @@ use App\Models\User;
 use App\Models\News;
 use App\Models\Question;
 use App\Models\FaqCategory;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReplyForm;
 
 //admin users
 class AdminDashboardController extends Controller
@@ -103,7 +107,9 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $users = DB::table('users')->get();
-        return view('admin.users', ['users' => $users]);
+        $messages = DB::table('contact_forms')->get();
+
+        return view('admin.users', ['users' => $users, 'msg' => $messages]);
     }
 
     public function addNewsView()
@@ -299,5 +305,25 @@ class AdminDashboardController extends Controller
         $qst = Question::find($id);
         $qst->forceDelete();
         return redirect(route('faqView'));
+    }
+
+    public function getMsg($id){
+        $msg = ContactForm::find($id);
+        return response()->json([
+            'item' => $msg,
+        ]);
+    }
+
+    public function sendMail(Request $req){
+        $reply = ContactForm::find($req->id);
+        $reply->from = $req->from;
+        $reply->answer = $req->reply;
+        $reply->answered = true;
+        $reply->update();
+        Mail::to($req->to)->send(new ReplyForm($reply));
+        return response()->json([
+            'status' => 200,
+            'message' => "Everything gucci!"
+        ]);
     }
 }

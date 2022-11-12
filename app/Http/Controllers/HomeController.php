@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 use App\Models\News;
+use App\Models\Comment;
+
 
 //for normal users
 class HomeController extends Controller
@@ -38,6 +41,42 @@ class HomeController extends Controller
     public function faqForm()
     {
         return view('faq.ask');
+    }
+
+    public function addComment(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'comment' => 'required|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->messages()
+            ]);
+        }else{
+            $post = News::find($req->news_id);
+
+            $comment = new Comment();
+            $comment->author = $req->author;
+            $comment->content = $req->comment;
+            $comment->news_id = $req->news_id;
+            $comment->post()->associate($post); //a comment belongs to 1 post
+            $comment->save();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Comment added successfully.',
+                'comment' => $comment
+            ]);
+        }
+    }
+
+    public function getComments($postId)
+    {
+        $comments = News::find($postId)->comments;
+        return response()->json([
+            'comments' => $comments,
+        ]);
     }
 
 }

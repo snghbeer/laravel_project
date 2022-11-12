@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('contact_forms', function (Blueprint $table) {
             $table->id();
-            $table->string('category_name');
-        });
-
-        Schema::table('questions', function (Blueprint $table) {
-            $table->foreignId('category_id')->constrained();
+            $table->timestamps();
+            $table->string('author');
+            $table->string('from');
+            $table->string('subject');
+            $table->string('content');
+            $table->boolean('answered')->default(false);
+            $table->string('answer');
         });
     }
 
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('contact_forms');
     }
 };
