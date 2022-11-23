@@ -10,6 +10,11 @@ use App\Models\News;
 use App\Models\FaqCategory;
 use App\Models\ContactForm;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
+
+use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 class GuestController extends Controller
 {
@@ -39,6 +44,10 @@ class GuestController extends Controller
         return view('emails.form');
     }
 
+    public function about(){
+        return view('faq.about');
+    }
+
     public function sendContactForm(Request $req){
         $validator = Validator::make($req->all(), [
             'email' => 'required|email|max:191',
@@ -64,5 +73,16 @@ class GuestController extends Controller
                 'message' => 'Your message has been sent!'
             ]);
         }
+    }
+
+    public function test(){
+
+        $users = Storage::disk('public')->files('avatars');
+        $files = Storage::disk('public')->files('news');
+        $path = 'storage/' . $files[0];
+        echo( '<img src="' . $path .'" alt="Responsive image">');
+ /*       return response()->json([
+            'files' => $files,
+        ]); */
     }
 }

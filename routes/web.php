@@ -70,11 +70,11 @@ Route::prefix('profile')->middleware('auth') -> group(function(){
 });  
 
 
-
-
 Route::get('/', [GuestController::class, 'index'])->name('guest.dash');
+Route::get('/test', [GuestController::class, 'test'])->name('guest.test');
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::get('/faq', [GuestController::class, 'faqView'])->name('faqView');
+Route::get('/about', [GuestController::class, 'about'])->name('about');
 Route::get('/faq/ask', [HomeController::class, 'faqForm'])->name('faqForm');
 Route::get('/faq/cat/{id}/questions', [GuestController::class, 'getCatQuestions'])->name('getCatQ');
 Route::get('/news/{id}', [GuestController::class, 'detailedNews'])->name('detailedNews');

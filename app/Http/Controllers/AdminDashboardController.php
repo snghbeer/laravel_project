@@ -316,7 +316,7 @@ class AdminDashboardController extends Controller
 
     public function sendMail(Request $req){
         $reply = ContactForm::find($req->id);
-        $reply->from = $req->from;
+        $reply->from = env('MAIL_USERNAME');
         $reply->answer = $req->reply;
         $reply->answered = true;
         $reply->update();
