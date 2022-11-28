@@ -37,14 +37,11 @@ class AdminDashboardController extends Controller
 
     public function getUser($id)
     {
-        //$usar = User::where('id', $id)->get();
         $user = DB::table('users')->where('id', $id)->first();
-
-        //echo $req->id; //cannot echo as it can't toString() the object
         dd($user); //for testing purposes
     }
 
-
+    //update a user role
     public function updateRole($userId)
     {
         $user = User::find($userId);
@@ -61,12 +58,9 @@ class AdminDashboardController extends Controller
         }
     }
 
+    //update a user data
     public function update(Request $request, $id)
     {
-        $customMessages = [
-            'required' => 'The :attribute field is required.',
-            'role.required' => 'Role is required.'
-        ];
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:191',
@@ -103,7 +97,7 @@ class AdminDashboardController extends Controller
         }
     }
 
-
+    //admin view
     public function index()
     {
         $users = DB::table('users')->get();
@@ -117,41 +111,36 @@ class AdminDashboardController extends Controller
         return view('news.add');
     }
 
+    //post request: add news
     public function addNews(Request $req)
     {
-        $validator = Validator::make($req->all(), [
+        $req->validate([
             'title' => 'required|max:191',
-            'cover' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
-            'content' => 'required',
+            'cover' => 'required|mimes:jpg,jpeg,png,gif|max:2048',
+            'content' => 'required|string',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 400,
-                'errors' => $validator->messages()
-            ]);
-        } else {
-            $news = new News();
-            $coverPath = null;
-            if ($req->hasFile('cover')) {
-                $coverPath = $req->file('cover')->store('news', 'public');
-                $news->cover = $coverPath;
-            }
-            $news->title = $req->title;
-            $news->content = $req->content;
-            $news->save();
-
-            // dd($req);
-            return redirect(route('home'));
+        $news = new News();
+        $coverPath = null;
+        if ($req->hasFile('cover')) {
+            $coverPath = $req->file('cover')->store('news', 'public');
+            $news->cover = $coverPath;
         }
+        $news->title = $req->title;
+        $news->content = $req->content;
+        $news->save();
+
+        // dd($req);
+        return redirect(route('home'));
     }
 
+    //detailed news view
     public function editNewsView($id)
     {
         $item = News::find($id);
         return view('news.edit', ['item' => $item]);
     }
 
+    //delete request: delete news
     public function deleteItem($id)
     {
         $item = News::find($id);
@@ -159,32 +148,25 @@ class AdminDashboardController extends Controller
         return redirect(route('home'));
     }
 
+    //post request: edit news
     public function editNews(Request $req)
     {
-        $validator = Validator::make($req->all(), [
+        $req->validate([
             'title' => 'required|max:191',
             'cover' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
             'content' => 'required',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 400,
-                'errors' => $validator->messages()
-            ]);
-        } else {
-            $item = News::find($req->item_id);
-            if ($item) {
-                $coverPath = null;
-                if ($req->hasFile('cover')) {
-                    $coverPath = $req->file('cover')->store('news', 'public');
-                    $item->cover = $coverPath;
-                }
-                $item->title = $req->title;
-                $item->content = $req->content;
-                $item->update();
-                return redirect(route('home'));
+        $item = News::find($req->item_id);
+        if ($item) {
+            $coverPath = null;
+            if ($req->hasFile('cover')) {
+                $coverPath = $req->file('cover')->store('news', 'public');
+                $item->cover = $coverPath;
             }
+            $item->title = $req->title;
+            $item->content = $req->content;
+            $item->update();
+            return redirect(route('home'));
         }
     }
 
@@ -254,6 +236,29 @@ class AdminDashboardController extends Controller
         ]);
     }
 
+    public function updateCat(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'category_name' => 'required|max:191|string',
+        ]);
+
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->messages()
+            ]);
+        } else{
+            $cat = FaqCategory::find($req->id);
+            $cat->category_name = $req->category_name;
+            $cat->update();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Category updated successfully.'
+            ]);
+        }
+    }
+
     public function deleteCat($id)
     {
         $item = FaqCategory::find($id);
@@ -307,6 +312,7 @@ class AdminDashboardController extends Controller
         return redirect(route('faqView'));
     }
 
+    //gets data of a contact form
     public function getMsg($id){
         $msg = ContactForm::find($id);
         return response()->json([
@@ -314,16 +320,23 @@ class AdminDashboardController extends Controller
         ]);
     }
 
+    //send mail when responding to a contact form
     public function sendMail(Request $req){
-        $reply = ContactForm::find($req->id);
-        $reply->from = env('MAIL_USERNAME');
-        $reply->answer = $req->reply;
-        $reply->answered = true;
-        $reply->update();
-        Mail::to($req->to)->send(new ReplyForm($reply));
-        return response()->json([
-            'status' => 200,
-            'message' => "Everything gucci!"
+        $req->validate([
+            'reply' => 'required|string'
         ]);
+
+        $reply = ContactForm::find($req->id);
+        if($reply->answered == false){
+            $reply->from = $req->from;
+            $reply->answer = $req->reply;
+            $reply->answered = true;
+            $reply->update();
+            Mail::to($req->to)->send(new ReplyForm($reply));
+            return response()->json([
+                'status' => 200,
+                'message' => "Everything gucci!"
+            ]);
+        }
     }
 }

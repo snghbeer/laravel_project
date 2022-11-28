@@ -31,7 +31,12 @@
             <h6>Username</h6>
           </label>
           <div class="col-lg-8">
-            <input class="form-control" type="text" id="username" name="username" value="{{ Auth::user()->name }}">
+            <input class="form-control  @error('username') is-invalid @enderror" type="text" id="username" name="username" value="{{ Auth::user()->name }}">
+            @error('username')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
           </div>
         </div>
         <br />
@@ -42,7 +47,12 @@
             <h6>Email</h6>
           </label>
           <div class="col-lg-8">
-            <input class="form-control" type="text" id="email" name="email" value="{{ Auth::user()->email }}">
+            <input class="form-control @error('email') is-invalid @enderror" type="text" id="email" name="email" value="{{ Auth::user()->email }}">
+            @error('email')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
           </div>
         </div>
         <br />
@@ -58,53 +68,6 @@
     </form>
   </div>
   <script>
-    /*        $(document).on('click', '.update_profile', function (e) {
-            e.preventDefault();
-
-            $(this).text('Updating..');
-            var id = $('#user_id').val();
-
-            var data = {
-                'avatar': $('#avatar').val(),
-                'name': $('#username').val(),
-                'email': $('#email').val(),
-                'bdate': $('#bday').val(),
-                'about': $('#about').val(),
-            }
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                type: "PUT",
-                url: "{{route('updateProfile', Auth::user()->id)}}",
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    // console.log(response);
-                    if (response.status == 400) {
-                        $('#update_msgList').html("");
-                        $('#update_msgList').addClass('alert alert-danger');
-                        $.each(response.errors, function (key, err_value) {
-                            $('#update_msgList').append('<li>' + err_value +
-                                '</li>');
-                        });
-                        $('.update_profile').text('Updating...');
-                    } else {
-                        $('#update_msgList').html("");
-
-                        $('#success_message').addClass('alert alert-success');
-                        $('#success_message').text(response.message);
-                        $('#editModal').find('input').val('');
-                        $('.update_profile').text('Update');
-                    }
-                }
-            });
-
-        }); */
   </script>
 </div>
 <hr>

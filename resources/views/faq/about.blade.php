@@ -8,6 +8,7 @@
       <div class="container-fluid py-5 h-100  border rounded-3">
         <h1 class="display-5 fw-bold">About</h1>
         <p class="col-md-8 fs-4">This project was made using Laravel. Below you can see all sources I've searched through to make this.</p>
+        <a target="_blank" href="https://github.com/snghbeer/laravel_project">Github repository</a>
       </div>
     </div>
     <div class="row align-items-md-stretch">
@@ -15,7 +16,7 @@
         <div class="h-100 p-5 text-white bg-dark rounded-3">
           <h2>Used composer packages</h2>
           <li class="list-group-item active"> <a target="_blank" href="https://packagist.org/packages/laravel/ui">Laravel/UI</a></li>
-          <p>Used for integrating a simple login system.</p>
+          <p>Used for integrating a simple authentication system.</p>
         </div>
       </div>
   </div>
@@ -48,6 +49,8 @@
           <h2>Layout/Templates</h2>
           <li class="list-group-item active"> <a target="_blank" href="https://startbootstrap.com/themes">Dashboard/sidebar</a></li>
           <li class="list-group-item active"> <a target="_blank" href="https://bbbootstrap.com/snippets/bootstrap-5-user-social-profile-transition-effect-79746232">Profile</a></li>
+          <li class="list-group-item active"> <a target="_blank" href="https://fontawesome.com/icons">Sidebar icons</a></li>
+
         </div>
       </div>
       <div class="col-md-6">

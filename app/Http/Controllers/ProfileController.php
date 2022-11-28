@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 class ProfileController extends Controller
@@ -34,22 +35,13 @@ class ProfileController extends Controller
     public function updateProfile(Request $req, $id){
 
         //dd($req->file('avatar'));
-        $validator = Validator::make($req->all(), [
-            'username' => 'required|max:191',
+        $req->validate([
+            'username' => 'required|max:191|string',
             'email' => 'required|email|max:191',
             'avatar' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
-        ], [
-            'role.required' => 'Role is required.'
+            'about' => 'string|nullable'
         ]);
 
-        if($validator->fails())
-        {
-            return response()->json([
-                'status'=>400,
-                'errors'=>$validator->messages()
-            ]);
-        }else{
-                    
         $user = User::find($id);
         if($user)
         {
@@ -82,7 +74,37 @@ class ProfileController extends Controller
                 'message'=>'A problem occured while trying to update.'
             ]);
         }
-        } 
+        
+    }
+
+    public function settingsView($id){
+        $user = User::where('id', $id)->get();
+        return view('profile.account', ['user' => $user[0]]);
+        //return response($user);
+        //dd($user) ; //for testing purposes
+    }
+
+    public function updateAccount(Request $req){
+        $req->validate([
+            'username' => 'required|max:191|string',
+            'opassw' => 'required|string',
+            'npassw' => 'required|string',
+            'cpassw' => 'required|string|same:npassw',
+
+        ]);
+
+        $user = User::find($req->user_id);
+        $hashedPassword = $user->password;
+            if (Hash::check($req->opassw, $hashedPassword)) {
+                $user->password = Hash::make($req->npassw);
+                $user->update();
+                return redirect(route('profile', $user->id));
+            }else{
+                return response()->json([
+                    'status'=>406,
+                    'message'=>'Wrong old password!'
+                ]);
+            }
         
     }
 }

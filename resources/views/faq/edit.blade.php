@@ -29,7 +29,8 @@
         </form>
     </section>
     <script>
-         fetchCategories()
+        fetchCategories()
+
         function fetchCategories() {
                 $.ajax({
                     type: "GET",
@@ -58,6 +59,8 @@
                     }
                 })
             }
+    
+    
     </script>
 </div>
 @endsection

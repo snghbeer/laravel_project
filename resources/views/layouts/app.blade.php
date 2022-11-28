@@ -105,11 +105,18 @@
                         <div class="nav">
                             @auth
                             <div class="sb-sidenav-menu-heading"><i class="fa-solid fa-user"></i> <b>{{Auth::user()->name}}</b></div>
+                                @if (Auth::user()->role === 1)
+                                <div class="sb-sidenav-menu-heading">Admin</div>
+                                <a class="nav-link" href="{{ route('admin.dash') }}">
+                                    <div class="sb-nav-link-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                                    {{ __('Admin dashboard') }}
+                                </a>
+                                @endif
                             @endauth
                             <div class="sb-sidenav-menu-heading">Core</div>
                             <a class="nav-link" href="{{route('guest.dash')}}">
                                 <div class="sb-nav-link-icon"><i class="fa-sharp fa-solid fa-house"></i></div>
-                                {{ __('Dashboard') }}
+                                {{ __('Home') }}
                             </a>
                             <div class="sb-sidenav-menu-heading">Interface</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -120,7 +127,7 @@
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="{{route('faqView')}}">{{ __('Frequently asked questions') }}</a>
-                                    <a class="nav-link" href="{{route('faqForm')}}">{{ __('Ask a question') }}</a>
+                                    <!-- <a class="nav-link" href="{{route('faqForm')}}">{{ __('Ask a question') }}</a> -->
                                 </nav>
                             </div>
                             <a class="nav-link" href="{{route('about')}}">

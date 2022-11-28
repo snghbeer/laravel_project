@@ -31,6 +31,13 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('Lolpapa1'),
                 'avatar' => 'avatars/3.png',
                 'role' => 0
+            ],
+            [
+                'name' => 'testuser',
+                'email' => 'misteur_j@live.fr',
+                'password' => Hash::make('Lolpapa1'),
+                'avatar' => null,
+                'role' => 0
             ]
         ]);
     }

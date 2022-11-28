@@ -29,14 +29,9 @@
                         <p class="fonts">{{Auth::user()->aboutme}}</p>
 
                     </div>
-
-                    <div class="buttons">
-
-                        <button class="btn btn-outline-primary px-4">
-                            <a href="{{route('editProfile', Auth::user()->id)}}">Edit</a>
-                        </button>
-                    </div>
-
+                       
+                    <a class="btn btn-secondary" href="{{route('editProfile', Auth::user()->id)}}">Edit</a>
+                    <a class="btn btn-secondary" href="{{route('settingsView', Auth::user()->id)}}">Account settings</a>
 
                 </div>
             </div>

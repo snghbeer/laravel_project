@@ -38,7 +38,6 @@ class ReplyForm extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: new Address($this->reply->from),
             subject: $this->reply->subject,
         );
     }

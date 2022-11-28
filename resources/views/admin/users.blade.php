@@ -6,7 +6,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">Edit & Update Student Data</h5>
+          <h5 class="modal-title" id="editModalLabel">Edit & Update User Data</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
@@ -49,7 +49,8 @@
           <h5 class="modal-title" id="replyModalLabel">Reply contact form</h5>
           <button type="button" class="btn-close close-reply" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <input type="hidden" id="user_mail"  value="{{Auth::user()->email}}"/>
+        <div id="reply_status"></div>
+        <input type="hidden" id="user_mail" value="{{Auth::user()->email}}" />
         <div class="modal-body contact-form">
         </div>
         <div class="modal-footer">
@@ -60,7 +61,7 @@
     </div>
   </div>
 
-  
+
   <div class="col-lg-9 mt-4 mt-lg-0">
     <div class="row">
       <div class="col-md-12">
@@ -83,31 +84,31 @@
         </div>
         </br>
         </br>
-          <h3>Messages</h3>
-          <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
-            <table class="table manage-candidates-top mb-0" id="usersTable">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>From</th>
-                  <th class="text-center">Subject</th>
-                  <th class="text-center">Answered</th>
-                  <th class="text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody class="mailBox">
+        <h3>Messages</h3>
+        <div class="user-dashboard-info-box table-responsive mb-0 bg-white p-4 shadow-sm">
+          <table class="table manage-candidates-top mb-0" id="usersTable">
+            <thead>
+              <tr>
+                <th></th>
+                <th>From</th>
+                <th class="text-center">Subject</th>
+                <th class="text-center">Answered</th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody class="mailBox">
               @foreach ($msg as $key => $item)
               <tr class="candidates-list">
-                 <td id="reply_id"> {{$key + 1 }} </td>
+                <td id="reply_id"> {{$key + 1 }} </td>
                 <td id="reply_from"> {{$item->author}} </td>
                 <td id="reply_subject" class="text-center"> {{$item->subject}} </td>
                 <td id="reply_answered" class="text-center"> {{$item->answered == 1 ? 'Yes' : 'No'}} </td>
-                <td class="text-center"><button type="button" value="{{$item->id}}" class="btn btn-secondary replyBtn btn-sm">Reply</button></td>
-                </tr>
+                <td class="text-center"><button type="button" value="{{$item->id}}" class="btn btn-secondary replyBtn btn-sm" disabled={{$item->answered == 1 ? 'true' : 'false'}}>Reply</button></td>
+              </tr>
               @endforeach
-              </tbody>
-            </table>
-          </div>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -190,16 +191,16 @@
                 $('#update_msgList').append('<li>' + err_value +
                   '</li>');
               });
-              $('.update_student').text('Update');
+              $('.update_user').text('Update');
             } else {
               $('#update_msgList').html("");
 
               $('#success_message').addClass('alert alert-success');
               $('#success_message').text(response.message);
               $('#editModal').find('input').val('');
-              $('.update_student').text('Update');
+              $('.update_user').text('Update');
               $('#editModal').modal('hide');
-              fetchstudent();
+              fetchUsers();
             }
           }
         });
@@ -223,7 +224,6 @@
               $('#success_message').text(response.message);
               $('#editModal').modal('hide');
             } else {
-              // console.log(response.student.name);
               $('#name').val(response.user.name);
               $('#email').val(response.user.email);
               $('#user_id').val(userId);
@@ -236,17 +236,17 @@
 
       $(document).on('click', '.replyBtn', function(e) {
         e.preventDefault();
-      //  console.log($(this).val())
+        //  console.log($(this).val())
         var url = '{{ route("admin.getMsg", ":id") }}';
         url = url.replace(':id', $(this).val());
-        console.log($("#user_mail").val())
+        //console.log($("#user_mail").val())
         $('#replyModal').modal('show');
 
         $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
 
         $.ajax({
           type: "GET",
@@ -276,10 +276,15 @@
                 <textarea class="form-control noresiz" id="form_content" name="form_content"  rows="3" disabled>${item.content}</textarea>
             </div>
 
-             <div class="mb-3">
-                <label class="form-label">Answer</label>
-                <textarea class="form-control noresiz" id="answer" name="answer"  rows="3"></textarea>
-            </div>
+             <div class="mb-3 replyDiv">
+                <label class="form-label @error('reply') is-invalid @enderror">Answer</label>
+                <textarea class="form-control noresiz" id="reply" name="reply"  rows="3" required></textarea>
+                @error('reply')
+                  <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
+                </div>
             `)
             }
           }
@@ -289,29 +294,36 @@
 
       $(document).on('click', '.replyMsg', function(e) {
         e.preventDefault();
-      //  console.log($(this).val())
+        //  console.log($(this).val())
         var url = '{{ route("admin.sendMail") }}';
         var data = {
           id: $('#item_id').val(),
           from: $('#user_mail').val(),
           to: $('#from').val(),
-          subject: "RE: " +  $('#subject').val(),
-          reply: $('#answer').val(),
+          subject: "RE: " + $('#subject').val(),
+          reply: $('#reply').val(),
         }
 
-       // console.log(data)
+        // console.log(data)
         $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+        $.ajax({
           type: "POST",
           url: url,
           data: data,
           success: function(response) {
             $('#replyModal').modal('hide');
-            //console.log(response)
+          },
+          error: function(err){
+            $('#reply_status').html('')
+            $('#reply_status').append(`
+            <span class="alert alert-danger" role="alert">
+                <strong>${err.responseJSON.message}</strong>
+             </span>
+            `);
           }
         })
       });
