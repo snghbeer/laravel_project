@@ -28,6 +28,7 @@
           <h2>JQUERY/Ajax</h2>
           <li class="list-group-item active"> <a target="_blank" href="https://www.w3schools.com/jquery/event_click.asp">onClick events</a></li>
           <li class="list-group-item active"> <a target="_blank"href="https://stackoverflow.com/questions/9269265/ajax-jquery-simple-get-request">Http requests</a></li>
+          <li class="list-group-item active"> <a target="_blank"href="https://api.jquery.com/append/">Jquery append</a></li>
 
         </div>
       </div>

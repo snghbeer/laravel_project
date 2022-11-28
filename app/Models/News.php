@@ -19,6 +19,6 @@ class News extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'news_id');
+        return $this->hasMany(Comment::class, 'news_id'); //has many comments (one to many)
     }
 }

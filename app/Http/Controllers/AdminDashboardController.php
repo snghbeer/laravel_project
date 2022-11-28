@@ -16,7 +16,14 @@ use App\Models\FaqCategory;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReplyForm;
 
-//admin users
+//Sometimes I use $req->validate for input validation 
+//and sometimes I use  $validator = Validator::make($request->all()...
+//In the first situation I don't use Jquery so client side validation can be made trough blade templates
+//and thus, it returns automically an error if input is invalid
+//for the latter situation I use Jquery, so If there's an input error
+// I want to update frontend without reloading the whole page 
+
+//admin controller
 class AdminDashboardController extends Controller
 {
 
@@ -39,23 +46,6 @@ class AdminDashboardController extends Controller
     {
         $user = DB::table('users')->where('id', $id)->first();
         dd($user); //for testing purposes
-    }
-
-    //update a user role
-    public function updateRole($userId)
-    {
-        $user = User::find($userId);
-        if ($user) {
-            return response()->json([
-                'status' => 200,
-                'user' => $user,
-            ]);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'No user Found.'
-            ]);
-        }
     }
 
     //update a user data
@@ -114,6 +104,7 @@ class AdminDashboardController extends Controller
     //post request: add news
     public function addNews(Request $req)
     {
+        
         $req->validate([
             'title' => 'required|max:191',
             'cover' => 'required|mimes:jpg,jpeg,png,gif|max:2048',
@@ -200,7 +191,7 @@ class AdminDashboardController extends Controller
             }
             $question->category_id = $catId;
     
-            $question->category()->associate($cat);
+            $question->category()->associate($cat); //associate the question with a category 
             $question->save();
 
             return redirect(route('admin.faqForm'));

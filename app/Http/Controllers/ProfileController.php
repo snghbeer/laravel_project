@@ -18,17 +18,13 @@ class ProfileController extends Controller
 
     public function getProfile($id){
         $user = User::where('id', $id)->get();
-       // return response($user[0]);
        return view('profile.index', ['user' => $user[0]]);
-        //return view('profile.index', ['user' => $user]);
-        //return response($user);
-        //dd($user) ; //for testing purposes
+
     }
 
     public function editProfile($id){
         $user = User::where('id', $id)->get();
         return view('profile.edit', ['user' => $user[0]]);
-        //return response($user);
         //dd($user) ; //for testing purposes
     }
 
@@ -51,6 +47,7 @@ class ProfileController extends Controller
 
             $avatarPath = null;
             if ($req->hasFile('avatar')) {
+                //stores the files in avatars folder as "userId" . extension file in storage/app/public
                 $avatarPath = $req->file('avatar')->storeAs(
                     'avatars',
                     Auth::id() . '.' . $req->file('avatar')->getClientOriginalExtension(),
@@ -95,7 +92,7 @@ class ProfileController extends Controller
 
         $user = User::find($req->user_id);
         $hashedPassword = $user->password;
-            if (Hash::check($req->opassw, $hashedPassword)) {
+            if (Hash::check($req->opassw, $hashedPassword)) {//checks if hash of plain text equals a certain hash
                 $user->password = Hash::make($req->npassw);
                 $user->update();
                 return redirect(route('profile', $user->id));

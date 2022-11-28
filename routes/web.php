@@ -16,7 +16,6 @@ Route::prefix('admin')->middleware('auth', 'admin') -> group(function(){
     });
     Route::get('/users', [AdminDashboardController::class, 'getUsers'])->name('users');
     Route::get('/user/{id}', [AdminDashboardController::class, 'getUser']);
-    Route::get('/user/edit/{id}', [AdminDashboardController::class, 'updateRole'])->name('edit');
     Route::put('/update-user/{id}', [AdminDashboardController::class, 'update']);
 
     Route::get('/news/add', [AdminDashboardController::class, 'addNewsView'])->name('admin.addNews');

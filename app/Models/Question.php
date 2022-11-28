@@ -16,6 +16,6 @@ class Question extends Model
     ];
 
     public function category(){
-        return $this->belongsTo(FaqCategory::class, 'category_id');
+        return $this->belongsTo(FaqCategory::class, 'category_id'); //has only one category
     }
 }

@@ -15,6 +15,6 @@ class Comment extends Model
     ];
 
     public function post(){
-        return $this->belongsTo(News::class, 'news_id');
+        return $this->belongsTo(News::class, 'news_id'); //has only one post
     }
 }

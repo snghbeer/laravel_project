@@ -15,6 +15,8 @@ class CheckAdmin
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
+
+    //Middleware function to check if an authenticated user is an admin
     public function handle(Request $request, Closure $next)
     {
         if(Auth::check()){
