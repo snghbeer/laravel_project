@@ -37,6 +37,7 @@
                 <div id="comments_container" class="d-grid gap-1">
                 </div>
                 <br />
+                @auth
                 <form>
                     <input type="hidden" id="author" name="author" value="{{Auth::user()->name}}" />
                     <input type="hidden" id="news_id" name="news_id" value="{{$item->id}}" />
@@ -46,6 +47,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary sendComment">Send</button>
                 </form>
+                @endif
+                @guest
+                <p>Sign in if you want to comment & see comments</p>
+                @endguest
             </div>
             <div class="d-flex justify-content-between bd-highlight mb-3">
                 <div class="p-2 bd-highlight">
@@ -78,8 +83,13 @@
                     $.each(response.comments, function(key, item) {
                         $('#comments_container').append(`
                         <div class="card card-body p-2 ">
-                            ${item.content}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-primary fw-bold mb-0">
+                                    ${item.author}
+                                    <span class="text-dark ms-2"> ${item.content}</span>
+                                </h6>
                             </div>
+                        </div>
                         `)
                     })
                 }
@@ -120,9 +130,16 @@
                     $('.alert_container').html("");
                     $('#comments_container').append(`
                             <div class="card card-body">
-                            ${response.comment.content}
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-primary fw-bold mb-0">
+                                    ${response.comment.author}
+                                    <span class="text-dark ms-2"> ${response.comment.content}</span>
+                                </h6>
+                            </div>
+
                             </div>`)
-                    $('#comment').val() = ""
+                    $('#comment').val("")
                 },
                 error: function(response) {
                     $('.alert_container').html("");

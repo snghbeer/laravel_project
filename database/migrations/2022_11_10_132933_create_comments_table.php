@@ -18,7 +18,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('author');
             $table->string('content');
-            $table->foreignId('news_id')->constrained('news', 'id');
+            //adding cascading relations, if news is deleted, all related comments will also be deleted
+            $table->foreignId('news_id')->constrained('news', 'id')->onDelete('cascade');
         });
     }
 

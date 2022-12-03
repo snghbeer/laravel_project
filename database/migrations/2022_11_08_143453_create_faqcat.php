@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('faq_categories', function (Blueprint $table) {
             $table->id();
             $table->string('category_name');
+
         });
 
         Schema::table('questions', function (Blueprint $table) {
-            $table->foreignId('category_id')->constrained('faq_categories', 'id');
+            //adding cascading relations, if category is deleted, all related question will also be deleted
+            $table->foreignId('category_id')->constrained('faq_categories', 'id')->onDelete('cascade');
         });
     }
 
